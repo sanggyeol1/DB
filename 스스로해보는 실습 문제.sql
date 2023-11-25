@@ -1,4 +1,4 @@
--- ÁúÀÇ1 : °¡Àå ¿À·¡ ±Ù¹«ÇÑ »ç¿ø¿¡ ´ëÇÑ ¸ðµç µ¥ÀÌÅÍ¸¦ °Ë»öÇÏ¶ó.
+-- ì§ˆì˜1 : ê°€ìž¥ ì˜¤ëž˜ ê·¼ë¬´í•œ ì‚¬ì›ì— ëŒ€í•œ ëª¨ë“  ë°ì´í„°ë¥¼ ê²€ìƒ‰í•˜ë¼.
 SELECT *
 FROM EMPLOYEE 
 WHERE HIREDATE = (
@@ -6,29 +6,29 @@ WHERE HIREDATE = (
     FROM EMPLOYEE
     );
 
--- ÁúÀÇ2 : ÃÖÁ¾Ã¶°ú °°Àº ºÎ¼­¿¡ ±Ù¹«ÇÏ´Â »ç¿ø¿¡ °üÇÑ ¸ðµç µ¥ÀÌÅÍ¸¦ °Ë»öÇÏ¶ó.
+-- ì§ˆì˜2 : ìµœì¢…ì² ê³¼ ê°™ì€ ë¶€ì„œì— ê·¼ë¬´í•˜ëŠ” ì‚¬ì›ì— ê´€í•œ ëª¨ë“  ë°ì´í„°ë¥¼ ê²€ìƒ‰í•˜ë¼.
 SELECT *
 FROM EMPLOYEE 
 WHERE DNO = (
     SELECT DNO
     FROM EMPLOYEE
-    WHERE EMPNAME = 'ÃÖÁ¾Ã¶'
+    WHERE EMPNAME = 'ìµœì¢…ì² '
     );
     
---ÁúÀÇ3 : È¸»çÀÇ ÀüÃ¼ »ç¿ø¼ö¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜3 : íšŒì‚¬ì˜ ì „ì²´ ì‚¬ì›ìˆ˜ë¥¼ ê²€ìƒ‰í•˜ë¼.
 SELECT COUNT(*)
 FROM EMPLOYEE;
 
---ÁúÀÇ4 : È¸»ç¿¡ ¸î °³ÀÇ ºÎ¼­°¡ ÀÖ´Â°¡¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜4 : íšŒì‚¬ì— ëª‡ ê°œì˜ ë¶€ì„œê°€ ìžˆëŠ”ê°€ë¥¼ ê²€ìƒ‰í•˜ë¼.
 SELECT COUNT(*)
 FROM DEPARTMENT;
 
---ÁúÀÇ5 : ±âÈ¹ºÎ¿¡ ±Ù¹«ÇÏ´Â »ç¿øµéÀÇ ÀÌ¸§°ú Á÷±ÞÀ» °Ë»öÇÏ¶ó.
+--ì§ˆì˜5 : ê¸°íšë¶€ì— ê·¼ë¬´í•˜ëŠ” ì‚¬ì›ë“¤ì˜ ì´ë¦„ê³¼ ì§ê¸‰ì„ ê²€ìƒ‰í•˜ë¼.
 SELECT EMPNAME, TITLE
 FROM EMPLOYEE, DEPARTMENT
-WHERE DNO = DEPTNO AND DEPTNAME = '±âÈ¹';
+WHERE DNO = DEPTNO AND DEPTNAME = 'ê¸°íš';
 
---ÁúÀÇ6 : ÇÑ¸í ÀÌ»óÀÇ »ç¿øÀÌ ±Ù¹«ÇÏ´Â ºÎ¼­ÀÇ °³¼ö¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜6 : í•œëª… ì´ìƒì˜ ì‚¬ì›ì´ ê·¼ë¬´í•˜ëŠ” ë¶€ì„œì˜ ê°œìˆ˜ë¥¼ ê²€ìƒ‰í•˜ë¼.
 
 SELECT COUNT(*)
 FROM DEPARTMENT
@@ -37,98 +37,163 @@ FROM DEPARTMENT, EMPLOYEE
 WHERE DNO = DEPTNO
 GROUP BY DEPTNO);
 
---ÁúÀÇ7 : »ç¿øÀÌ ÇÑ ¸íµµ ±Ù¹«ÇÏÁö ¾Ê´Â ºÎ¼­¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜7 : ì‚¬ì›ì´ í•œ ëª…ë„ ê·¼ë¬´í•˜ì§€ ì•ŠëŠ” ë¶€ì„œë¥¼ ê²€ìƒ‰í•˜ë¼.
 SELECT *
 FROM DEPARTMENT
 WHERE DEPTNO NOT IN (SELECT DEPTNO
 FROM EMPLOYEE, DEPARTMENT
 WHERE DEPTNO = DNO);
 
---ÁúÀÇ8 : »ç¿øÀÌ ÇÑ ¸í ÀÌ»ó ¼ÓÇÑ ºÎ¼­¿¡ ´ëÇØ¼­ Æò±Õ ±Þ¿©¸¦ ±¸ÇÏ¿©¶ó.
+--ì§ˆì˜8 : ì‚¬ì›ì´ í•œ ëª… ì´ìƒ ì†í•œ ë¶€ì„œì— ëŒ€í•´ì„œ í‰ê·  ê¸‰ì—¬ë¥¼ êµ¬í•˜ì—¬ë¼.
 SELECT AVG(SALARY)
 FROM EMPLOYEE, DEPARTMENT
 WHERE DNO = DEPTNO
 GROUP BY DNO;
 
---ÁúÀÇ9 : ºÎ¼­¿¡ ¼ÓÇÑ »ç¿øµéÀÇ Æò±Õ ±Þ¿©°¡ °¡Àå ¸¹Àº ºÎ¼­ÀÇ ÀÌ¸§°ú Æò±Õ ±Þ¿©¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜9 : ë¶€ì„œì— ì†í•œ ì‚¬ì›ë“¤ì˜ í‰ê·  ê¸‰ì—¬ê°€ ê°€ìž¥ ë§Žì€ ë¶€ì„œì˜ ì´ë¦„ê³¼ í‰ê·  ê¸‰ì—¬ë¥¼ ê²€ìƒ‰í•˜ë¼.
 SELECT AVG(SALARY)
 FROM EMPLOYEE, DEPARTMENT
 WHERE DNO = DEPTNO
 GROUP BY DNO
 ORDER BY AVG(SALARY) DESC;
 
---ÁúÀÇ10: EMPLOYEE¿Í DEPARTMENT¸±·¹ÀÌ¼ÇÀ» Á¶ÀÎÇÏ°í, ºÎ¼­¹øÈ£ ¼ø¼­¿¡ µû¶ó Á¤·ÄÇÏ¶ó.
+--ì§ˆì˜10: EMPLOYEEì™€ DEPARTMENTë¦´ë ˆì´ì…˜ì„ ì¡°ì¸í•˜ê³ , ë¶€ì„œë²ˆí˜¸ ìˆœì„œì— ë”°ë¼ ì •ë ¬í•˜ë¼.
 SELECT *
 FROM EMPLOYEE, DEPARTMENT
 WHERE DNO = DEPTNO
 ORDER BY DNO ASC;
 
---ÁúÀÇ11 : ¸ðµç »ç¿øµéÀ» Á÷±Þº°·Î ±×·ìÈ­ÇÏ°í, °¢ ±×·ìº° »ç¿ø ¼ö¿Í Æò±Õ ±Þ¿©¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜11 : ëª¨ë“  ì‚¬ì›ë“¤ì„ ì§ê¸‰ë³„ë¡œ ê·¸ë£¹í™”í•˜ê³ , ê° ê·¸ë£¹ë³„ ì‚¬ì› ìˆ˜ì™€ í‰ê·  ê¸‰ì—¬ë¥¼ ê²€ìƒ‰í•˜ë¼.
 SELECT TITLE, COUNT(*), ROUND(AVG(SALARY))
 FROM EMPLOYEE, DEPARTMENT
 WHERE DNO = DEPTNO
 GROUP BY TITLE
 ORDER BY TITLE DESC;
 
---ÁúÀÇ12 : ¸ðµç »ç¿øµéÀ» Á÷±Þº°·Î ±×·ìÈ­ ÇÏ°í, µ¿ÀÏ Á÷±ÞÀ» °®´Â »ç¿ø ¼ö°¡ 2¸í ÀÌ»óÀÎ Á÷±Þ¿¡ ´ëÇØ¼­ Á÷±Þ, »ç¿ø ¼ö, ¿¬°£ ±Þ¿©¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜12 : ëª¨ë“  ì‚¬ì›ë“¤ì„ ì§ê¸‰ë³„ë¡œ ê·¸ë£¹í™” í•˜ê³ , ë™ì¼ ì§ê¸‰ì„ ê°–ëŠ” ì‚¬ì› ìˆ˜ê°€ 2ëª… ì´ìƒì¸ ì§ê¸‰ì— ëŒ€í•´ì„œ ì§ê¸‰, ì‚¬ì› ìˆ˜, ì—°ê°„ ê¸‰ì—¬ë¥¼ ê²€ìƒ‰í•˜ë¼.
 SELECT TITLE, COUNT(*), SUM(SALARY)
 FROM EMPLOYEE
 GROUP BY TITLE
 HAVING COUNT(*) >= 2;
 
---ÁúÀÇ13 : Á÷±ÞÀÌ ´ë¸®ÀÎ »ç¿øÀÌ Àû¾îµµ 2¸í ÀÌ»ó ¼ÓÇÑ ºÎ¼­ÀÇ ÀÌ¸§À» °Ë»öÇÏ¶ó.
+--ì§ˆì˜13 : ì§ê¸‰ì´ ëŒ€ë¦¬ì¸ ì‚¬ì›ì´ ì ì–´ë„ 2ëª… ì´ìƒ ì†í•œ ë¶€ì„œì˜ ì´ë¦„ì„ ê²€ìƒ‰í•˜ë¼.
 
 SELECT DEPTNAME, COUNT(*)
 FROM DEPARTMENT, EMPLOYEE
 WHERE DNO = DEPTNO
-    AND TITLE = '´ë¸®'
+    AND TITLE = 'ëŒ€ë¦¬'
 GROUP BY DEPTNAME
 HAVING COUNT(*) >= 2;
 
---ÁúÀÇ14 : ¸ðµç ºÎ¼­¿¡ ´ëÇØ¼­ ÀÌ¸§, Ãþ, °¢ ºÎ¼­¿¡ ±Ù¹«ÇÏ´Â »ç¿ø ¼ö¸¦ °Ë»öÇÏ¶ó. »ç¿øÀÌ ¾ø´Â ºÎ¼­µµ Æ÷ÇÔ½ÃÄÑ¶ó.
+--ì§ˆì˜14 : ëª¨ë“  ë¶€ì„œì— ëŒ€í•´ì„œ ì´ë¦„, ì¸µ, ê° ë¶€ì„œì— ê·¼ë¬´í•˜ëŠ” ì‚¬ì› ìˆ˜ë¥¼ ê²€ìƒ‰í•˜ë¼. ì‚¬ì›ì´ ì—†ëŠ” ë¶€ì„œë„ í¬í•¨ì‹œì¼œë¼.
 
 SELECT DEPTNAME, FLOOR, COUNT(EMPNO)
 FROM DEPARTMENT LEFT OUTER JOIN EMPLOYEE ON DEPTNO = DNO
 GROUP BY DEPTNAME, FLOOR;
 
 
---ÁúÀÇ15 : ºÎ¼­1,2,3 ¿¡ °øÅëÀûÀ¸·Î ÀÖ´Â Á÷±ÞÀ» °Ë»öÇÏ¶ó.
+--ì§ˆì˜15 : ë¶€ì„œ1,2,3 ì— ê³µí†µì ìœ¼ë¡œ ìžˆëŠ” ì§ê¸‰ì„ ê²€ìƒ‰í•˜ë¼.
 
+SELECT TITLE
+FROM EMPLOYEE
+WHERE DNO IN (1, 2, 3)
+GROUP BY TITLE
+HAVING COUNT(DISTINCT DNO) = 3;
 
-
---ÁúÀÇ16 : °³¹ßºÎ¼­¿¡ ±Ù¹«ÇÏ´Â »ç¿øµéÀÇ Á÷±Þ°ú Á÷±Þº° »ç¿ø ¼ö¸¦ °Ë»öÇÏ¶ó. »ç¿ø ¼ö°¡ ¸¹Àº Á÷±ÞºÎÅÍ Ç¥½ÃÇÏ¶ó.
+--ì§ˆì˜16 : ê°œë°œë¶€ì„œì— ê·¼ë¬´í•˜ëŠ” ì‚¬ì›ë“¤ì˜ ì§ê¸‰ê³¼ ì§ê¸‰ë³„ ì‚¬ì› ìˆ˜ë¥¼ ê²€ìƒ‰í•˜ë¼. ì‚¬ì› ìˆ˜ê°€ ë§Žì€ ì§ê¸‰ë¶€í„° í‘œì‹œí•˜ë¼.
 
 SELECT TITLE, COUNT(*)
 FROM DEPARTMENT, EMPLOYEE
-WHERE DNO = DEPTNO AND DEPTNAME = '°³¹ß'
+WHERE DNO = DEPTNO AND DEPTNAME = 'ê°œë°œ'
 GROUP BY TITLE
 ORDER BY COUNT(*) DESC;
 
 
---ÁúÀÇ17 : Æò±Õ ±Þ¿©°¡ °¡Àå ³ôÀº ºÎ¼­ÀÇ ºÎ¼­¹øÈ£¿Í ÀÌ ºÎ¼­ÀÇ ÃÖ°í±Þ¿©¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜17 : í‰ê·  ê¸‰ì—¬ê°€ ê°€ìž¥ ë†’ì€ ë¶€ì„œì˜ ë¶€ì„œë²ˆí˜¸ì™€ ì´ ë¶€ì„œì˜ ìµœê³ ê¸‰ì—¬ë¥¼ ê²€ìƒ‰í•˜ë¼.
+
+SELECT *
+FROM(
+    SELECT DNO, MAX(SALARY)
+    FROM EMPLOYEE
+    GROUP BY DNO
+    ORDER BY AVG(SALARY) DESC)
+WHERE ROWNUM <= 1;
+    
+--ì§ˆì˜18 : ì†Œì† ì‚¬ì› ìˆ˜ê°€ 4ëª… ì´í•˜ì¸ ë¶€ì„œì˜ ì´ë¦„ê³¼ ì‚¬ì› ìˆ˜ë¥¼ ê²€ìƒ‰í•˜ë¼.
+
+SELECT DEPTNO, DEPTNAME, COUNT(EMPNO)
+FROM DEPARTMENT LEFT OUTER JOIN EMPLOYEE
+ON DEPTNO =  DNO
+GROUP BY DEPTNO, DEPTNAME
+HAVING COUNT(EMPNO) <= 4;
+
+--ì§ˆì˜19 : ìžì‹ ì´ ì†í•œ ë¶€ì„œì˜ í‰ê·  ê¸‰ì—¬ë³´ë‹¤ ë§Žì´ ë°›ëŠ” ì‚¬ì›ì˜ ì´ë¦„, ë¶€ì„œë²ˆí˜¸, ê¸‰ì—¬ë¥¼ ê²€ìƒ‰í•˜ë¼.
+
+SELECT E.EMPNAME, E.EMPNO, E.DNO, E.SALARY
+FROM EMPLOYEE E JOIN(
+    SELECT DNO, AVG(SALARY) AVGSAL
+    FROM EMPLOYEE
+    GROUP BY DNO) J
+    ON E.DNO = J.DNO
+WHERE E.SALARY > J.AVGSAL;
 
 
---ÁúÀÇ18 : ¼Ò¼Ó »ç¿ø ¼ö°¡ 4¸í ÀÌÇÏÀÎ ºÎ¼­ÀÇ ÀÌ¸§°ú »ç¿ø ¼ö¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜20 : ê° ë¶€ì„œì—ì„œ ê°€ìž¥ ë§Žì€ ê¸‰ì—¬ë¥¼ ë°›ëŠ” ì‚¬ì›ë“¤ì˜ ì´ë¦„, ë¶€ì„œë²ˆí˜¸, ê¸‰ì—¬ë¥¼ ê²€ìƒ‰í•˜ë¼.
+
+SELECT EMPNAME, EMPNO, SALARY
+FROM EMPLOYEE E JOIN(
+    SELECT DNO, MAX(SALARY) MAXSAL
+    FROM EMPLOYEE
+    GROUP BY DNO
+) J ON E.DNO = J.DNO
+WHERE E.SALARY = J.MAXSAL;
 
 
 
---ÁúÀÇ19 : ÀÚ½ÅÀÌ ¼ÓÇÑ ºÎ¼­ÀÇ Æò±Õ ±Þ¿©º¸´Ù ¸¹ÀÌ ¹Þ´Â »ç¿øÀÇ ÀÌ¸§, ºÎ¼­¹øÈ£, ±Þ¿©¸¦ °Ë»öÇÏ¶ó.
 
---ÁúÀÇ20 : °¢ ºÎ¼­¿¡¼­ °¡Àå ¸¹Àº ±Þ¿©¸¦ ¹Þ´Â »ç¿øµéÀÇ ÀÌ¸§, ºÎ¼­¹øÈ£, ±Þ¿©¸¦ °Ë»öÇÏ¶ó.
 
---ÁúÀÇ21 : ¸ðµç »ç¿ø¿¡ ´ëÇØ¼­ »ç¿ø¹øÈ£, ÀÌ¸§, ±Þ¿©, ºÎ¼­¹øÈ£, ¼Ò¼Ó ºÎ¼­ÀÇ Æò±Õ ±Þ¿©¸¦ °Ë»öÇÏ¶ó.
+--ì§ˆì˜21 : ëª¨ë“  ì‚¬ì›ì— ëŒ€í•´ì„œ ì‚¬ì›ë²ˆí˜¸, ì´ë¦„, ê¸‰ì—¬, ë¶€ì„œë²ˆí˜¸, ì†Œì† ë¶€ì„œì˜ í‰ê·  ê¸‰ì—¬ë¥¼ ê²€ìƒ‰í•˜ë¼.
 
---ÁúÀÇ22 : ÃÖÁ¾Ã¶ ¶Ç´Â ÀÌ¼ö¹Î°ú °°Àº Á÷±ÞÀ» °¡Áø ¸ðµç »ç¿ø¿¡ ´ëÇØ¼­ »ç¿øÀÇ ÀÌ¸§°ú Á÷±ÞÀ» °Ë»öÇÏ¶ó.
+SELECT E.EMPNO, E.EMPNAME, E.SALARY, E.DNO, J.AVGSAL
+FROM EMPLOYEE E 
+JOIN (
+    SELECT DNO, AVG(SALARY) AS AVGSAL
+    FROM EMPLOYEE
+    GROUP BY DNO
+) J ON E.DNO = J.DNO;
 
---ÁúÀÇ23 : ±âÈ¹ ¶Ç´Â ÃÑ¹« ºÎ¼­¿¡ ±Ù¹«ÇÏÁö ¾Ê´Â ¸ðµç »ç¿øµéÀÇ ÀÌ¸§À» °Ë»öÇÏ¶ó.
 
---ÁúÀÇ24 : DEPARTMENT ¸±·¹ÀÌ¼Ç¿¡ ÅõÇÃ(5,'È«º¸',8)À» »ðÀÔÇÏ¶ó.
+--ì§ˆì˜22 : ìµœì¢…ì²  ë˜ëŠ” ì´ìˆ˜ë¯¼ê³¼ ê°™ì€ ì§ê¸‰ì„ ê°€ì§„ ëª¨ë“  ì‚¬ì›ì— ëŒ€í•´ì„œ ì‚¬ì›ì˜ ì´ë¦„ê³¼ ì§ê¸‰ì„ ê²€ìƒ‰í•˜ë¼.
+SELECT EMPNAME, TITLE
+FROM EMPLOYEE
+WHERE TITLE IN(SELECT TITLE
+FROM EMPLOYEE
+WHERE EMPNAME IN ('ìµœì¢…ì² ', 'ì´ìˆ˜ë¯¼'));
 
---ÁúÀÇ25 : EMPLOYEE ¸±·¹ÀÌ¼Ç¿¡¼­ ºÎ¼­¹øÈ£ 3¿¡ ±Ù¹«ÇÏ´Â »ç¿øµéÀ» »èÁ¦ÇÏ¶ó.
+--ì§ˆì˜23 : ê¸°íš ë˜ëŠ” ì´ë¬´ ë¶€ì„œì— ê·¼ë¬´í•˜ì§€ ì•ŠëŠ” ëª¨ë“  ì‚¬ì›ë“¤ì˜ ì´ë¦„ì„ ê²€ìƒ‰í•˜ë¼.
 
---ÁúÀÇ26 : ºÎ¼­¹øÈ£ 2¿¡ ±Ù¹«ÇÏ´Â »ç¿øµéÀÇ ±Þ¿©¸¦ 5%ÀÎ»óÇÏ¶ó.
+SELECT EMPNAME
+FROM DEPARTMENT, EMPLOYEE
+WHERE DNO = DEPTNO AND DEPTNAME NOT IN('ê¸°íš', 'ì´ë¬´');
 
---ÁúÀÇ27 : Á÷±ÞÀÌ °úÀåÀÎ »ç¿øµéÀÇ »ç¿ø¹øÈ£, »ç¿øÀÌ¸§, ±Þ¿©·Î ÀÌ·ç¾îÁø ºä¸¦ Á¤ÀÇÇÏ¶ó.
+--ì§ˆì˜24 : DEPARTMENT ë¦´ë ˆì´ì…˜ì— íˆ¬í”Œ(5,'í™ë³´',8)ì„ ì‚½ìž…í•˜ë¼.
+INSERT INTO DEPARTMENT VALUES(5, 'í™ë³´', 8);
+
+--ì§ˆì˜25 : EMPLOYEE ë¦´ë ˆì´ì…˜ì—ì„œ ë¶€ì„œë²ˆí˜¸ 3ì— ê·¼ë¬´í•˜ëŠ” ì‚¬ì›ë“¤ì„ ì‚­ì œí•˜ë¼.
+--MANAGERì†ì„±ì´ EMPNOë¥¼ ì°¸ì¡°í•˜ëŠ” í˜•ì‹ì´ê¸° ë•Œë¬¸ì— ì‚­ì œ ì•ˆë¨
+DELETE
+FROM EMPLOYEE
+WHERE DNO = 3;
+
+--ì§ˆì˜26 : ë¶€ì„œë²ˆí˜¸ 2ì— ê·¼ë¬´í•˜ëŠ” ì‚¬ì›ë“¤ì˜ ê¸‰ì—¬ë¥¼ 5%ì¸ìƒí•˜ë¼.
+UPDATE EMPLOYEE
+SET SALARY = SALARY*1.05
+WHERE DNO = 2
+
+
+
+
+
 
 
 
