@@ -1,61 +1,67 @@
--- 질의1 : 가장 오래 근무한 사원에 대한 모든 데이터를 검색하라.
-SELECT *
+--질의1 : 가장 오래 근무한 사원에 관한 모든 데이터를 검색하라.
+SELECT*
 FROM EMPLOYEE 
-WHERE HIREDATE = (
-    SELECT MIN(HIREDATE)
-    FROM EMPLOYEE
-    );
+WHERE HIREDATE = (SELECT MIN(HIREDATE)
+FROM EMPLOYEE);
 
--- 질의2 : 최종철과 같은 부서에 근무하는 사원에 관한 모든 데이터를 검색하라.
+--질의2 : 최종철과 같은 부서에 근무하는 사원에 관한 모든 데이터를 검색하라.
 SELECT *
-FROM EMPLOYEE 
+FROM EMPLOYEE
 WHERE DNO = (
     SELECT DNO
     FROM EMPLOYEE
     WHERE EMPNAME = '최종철'
-    );
-    
---질의3 : 회사의 전체 사원수를 검색하라.
+);
+
+--질의3 : 회사의 전체 사원 수를 검색하라.
 SELECT COUNT(*)
-FROM EMPLOYEE;
+FROM EMPLOYEE
 
 --질의4 : 회사에 몇 개의 부서가 있는가를 검색하라.
 SELECT COUNT(*)
-FROM DEPARTMENT;
+FROM DEPARTMENT
 
 --질의5 : 기획부에 근무하는 사원들의 이름과 직급을 검색하라.
 SELECT EMPNAME, TITLE
 FROM EMPLOYEE, DEPARTMENT
 WHERE DNO = DEPTNO AND DEPTNAME = '기획';
 
---질의6 : 한명 이상의 사원이 근무하는 부서의 개수를 검색하라.
-
+--질의6 : 한 명이상의 사원이 근무하는 부서의 개수를 검색하라.
 SELECT COUNT(*)
-FROM DEPARTMENT
-WHERE DEPTNO IN (SELECT DEPTNO
+FROM(SELECT DEPTNO
+FROM DEPARTMENT, EMPLOYEE
+WHERE DEPTNO = DNO
+GROUP BY DEPTNO
+)
+
+
+--질의7 : 사원이 한명도 근무하지 않는 부서를 검색하라.
+SELECT *
+FROM(SELECT DEPTNO
+FROM DEPARTMENT)
+MINUS
+(
+SELECT DNO
 FROM DEPARTMENT, EMPLOYEE
 WHERE DNO = DEPTNO
-GROUP BY DEPTNO);
+)
 
---질의7 : 사원이 한 명도 근무하지 않는 부서를 검색하라.
-SELECT *
-FROM DEPARTMENT
-WHERE DEPTNO NOT IN (SELECT DEPTNO
-FROM EMPLOYEE, DEPARTMENT
-WHERE DEPTNO = DNO);
 
---질의8 : 사원이 한 명 이상 속한 부서에 대해서 평균 급여를 구하여라.
-SELECT AVG(SALARY)
-FROM EMPLOYEE, DEPARTMENT
-WHERE DNO = DEPTNO
-GROUP BY DNO;
+--질의8 : 사원이 한 명 이상 속한 부서에 대해서 평균 급여를 검색하라
 
---질의9 : 부서에 속한 사원들의 평균 급여가 가장 많은 부서의 이름과 평균 급여를 검색하라.
-SELECT AVG(SALARY)
+SELECT DNO, AVG(SALARY)
 FROM EMPLOYEE, DEPARTMENT
-WHERE DNO = DEPTNO
+WHERE DEPTNO = DNO
 GROUP BY DNO
-ORDER BY AVG(SALARY) DESC;
+
+--질의9 : 부서에 속한 사원들의 평균 급여가 가장 많은 부서의 이름과 평균 급여를 검색하라
+SELECT DEPTNAME, AVG(SALARY)
+FROM DEPARTMENT, EMPLOYEE
+WHERE DNO = DEPTNO
+GROUP BY DEPTNAME
+HAVING AVG(SALARY) = (SELECT MAX(AVG(SALARY))
+FROM EMPLOYEE
+GROUP BY DNO)
 
 --질의10: EMPLOYEE와 DEPARTMENT릴레이션을 조인하고, 부서번호 순서에 따라 정렬하라.
 SELECT *
