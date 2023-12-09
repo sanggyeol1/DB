@@ -1,0 +1,202 @@
+-- 직원의 이름과 Supervisor의 이름을 검색하라 (via SelfJoin) O
+SELECT E1.FNAME, E1.LNAME, E2.FNAME SUPERFNAME, E2.LNAME SUPERLNAME
+FROM EMPLOYEE E1, EMPLOYEE E2
+WHERE E1.SUPERSSN = E2.SSN;
+
+
+--주소가 'Houston, TX'인 모든 사원을 검색하라
+SELECT SSN, FNAME, LNAME
+FROM EMPLOYEE
+WHERE ADDRESS LIKE '%Houston, TX';
+
+--WHERE 조건절이 없을 경우 => 카티션 Product가 일어난다
+SELECT *
+FROM EMPLOYEE, DEPARTMENT
+
+
+--사원이 수행하는 프로젝트들을 검색하는데, 사원이 속한 부서 이름, Lname, Fname, 수행 Project 이름을 검색하라.
+SELECT DNAME, LNAME, FNAME, PNAME
+FROM DEPARTMENT, EMPLOYEE, WORKS_ON, PROJECT
+WHERE DNUMBER = DNO AND SSN = ESSN AND PNO = PNUMBER;
+
+
+--JOHN SMITH가 속한 부서번호이거나, ADMINISTRATION부서의 부서번호를 검색하라.
+
+SELECT DNO
+FROM EMPLOYEE
+WHERE FNAME = 'John' AND LNAME = 'Smith'
+UNION
+SELECT DNUMBER
+FROM DEPARTMENT
+WHERE DNAME = 'Administration';
+
+
+--For each project on which more than two employees work, retrieve the project number,
+--the project name, and the number of employees who work on the project. 
+SELECT PNUMBER, PNAME, COUNT(ESSN)
+FROM PROJECT, WORKS_ON
+WHERE PNUMBER = PNO
+GROUP BY PNUMBER , PNAME
+HAVING COUNT(ESSN) > 2
+
+
+-- For each department, retrieve the department number,
+--the number of employees in the department, and their average salary. 
+--COUNT(SSN) 은 COUNT(*) 과 같은데 COUNT(MGRSSN)은 COUNT(*)와 다름
+
+SELECT DNO, COUNT(SSN), AVG(SALARY) AVG_SAL
+FROM EMPLOYEE
+GROUP BY DNO
+
+
+-- 박영권과 같은 직급을 갖는 모든 사원들의 이름과 직급을 검색하라.
+-- 단 중첩질의를 사용할 것
+SELECT EMPNAME, TITLE
+FROM EMPLOYEE
+WHERE TITLE = (
+    SELECT TITLE
+    FROM EMPLOYEE
+    WHERE EMPNAME = '박영권' -- scalar 값 return ('과장')
+);
+
+
+-- 박영권과 같은 직급을 갖는 모든 사원들의 이름과 직급을 검색하라.
+-- 단 충첩질의를 사용하지 말아라. => self join을 사용할 것
+SELECT E2.EMPNAME, E2.TITLE
+FROM EMPLOYEE E1, EMPLOYEE E2
+WHERE E1.TITLE = E2.TITLE AND E1.EMPNAME = '박영권'
+
+
+-- 장르가 Action인 비디오 테이프를 모두 예약한 고객의 이름을 검색하라.
+SELECT NAME
+FROM CUSTOMER C
+WHERE NOT EXISTS (
+    (SELECT VIDEO_ID
+    FROM VIDEO
+    WHERE UPPER(GENRE) ='ACTION') -- 장르가 Action인 VIDEO_ID, Uncorelated inner query
+    MINUS
+    (SELECT VIDEO_ID
+    FROM RESERVED
+    WHERE CUSTOMER_ID = C.CUSTOMER_ID) -- Each CUSTOMER가 RESERVED한 VIDEO_ID, Corelated inner query
+);
+
+
+-- 6번 부서가 담당하는 프로젝트를 모두 수행하는 사원의 이름을 검색하라
+
+SELECT FNAME, LNAME
+FROM EMPLOYEE E
+WHERE NOT EXISTS(
+    (SELECT PNUMBER
+    FROM PROJECT
+    WHERE DNUM = 6
+    ) -- 6번부서가 담당하는 프로젝트 NO
+    MINUS
+    (SELECT PNO
+    FROM WORKS_ON
+    WHERE ESSN = E.SSN
+    ) -- 각 사원들이 담당하는 프로젝트 NO
+)
+
+
+-- JOHN SMITH가 수행하는 프로젝트를 모두 수행하는 직원의 Fname, Lname을 검색하라
+SELECT Fname, Lname
+FROM EMPLOYEE E
+WHERE NOT EXISTS (
+    (SELECT Pno
+    FROM EMPLOYEE, WORKS_ON
+    WHERE SSN = ESSN AND UPPER(Fname)='JOHN' AND UPPER(Lname)='SMITH') -- JOHN SMITH가 수행하는 프로젝트
+    MINUS
+    (SELECT Pno
+    FROM WORKS_ON
+    WHERE E.SSN = ESSN) -- Each EMPLOYEE가 수행하는 Project
+);
+
+
+INSERT INTO EMPLOYEE(Fname, Lname, Dno, SSN)
+VALUES('Yechan', 'Kim', 4, '653298653');
+
+DELETE FROM EMPLOYEE
+WHERE UPPER(Lname) = 'SMITH';
+
+UPDATE PROJECT
+SET Plocation = 'Bellaire', Dnum = 5
+WHERE Pnumber = 10;
+
+-- RESEARCH DEPARTMENT 사원의 급여를 10% 인상하라, TIP: uncorelated, inner query, In operator
+UPDATE EMPLOYEE
+SET SALARY = SALARY * 1.1
+WHERE Dno IN (SELECT Dnumber
+    FROM DEPARTMENT
+    WHERE UPPER(Dname) = 'RESEARCH'
+);
+
+-- RESEARCH DEPARTMENT 사원의 급여를 10% 인상하라, TIP: uncorelated, inner query, equal operator
+UPDATE EMPLOYEE
+SET SALARY = SALARY * 1.1
+WHERE Dno = (SELECT Dnumber
+    FROM DEPARTMENT
+    WHERE UPPER(Dname) = 'RESEARCH'
+);
+
+-- 7. 장르가 '다큐멘터리'인 비디오 테이프를 모두 예약한 고객의 이름을 검색하라.
+
+
+SELECT NAME
+FROM CUSTOMER C
+WHERE NOT EXISTS(
+    (
+    SELECT VIDEO_ID
+    FROM VIDEO
+    WHERE GENRE = 'Documentary'
+    ) -- 장르가 다큐멘터리인 비디오 테이프의 ID
+    MINUS
+    (
+    SELECT VIDEO_ID
+    FROM RESERVED R
+    WHERE C.CUSTOMER_ID = R.CUSTOMER_ID
+    ) --각 고객이 예약한 비디오테이프의 ID
+)
+
+
+
+-- 3. 예약되지 않은 비디오 테이프의 ID를 검색하라.
+SELECT *
+FROM (SELECT VIDEO_ID
+FROM VIDEO)
+MINUS
+(SELECT VIDEO_ID
+FROM RESERVED);
+
+--(5) 적어도 한 시험의 성적이 ‘A0'인 학생들의 학번을 검색하라. 결과에서 중복이 제거되도록 하라.
+SELECT SID
+FROM EXAM
+WHERE GRADE = 'A0'
+GROUP BY SID
+HAVING COUNT(CID) >= 1
+
+
+(7) 모든 시험의 성적이 ‘A0' 인 학생들의 학번을 검색하라.
+select distinct sid
+from exam E
+where not exists
+(
+(select cid from exam where sid = E.sid)
+Minus
+(select cid from exam where sid = E.sid and grade='A0')
+);
+
+--질의9 : 부서에 속한 사원들의 평균 급여가 가장 많은 부서의 이름과 평균 급여를 검색하라
+SELECT DEPTNAME, AVG(SALARY)
+FROM DEPARTMENT, EMPLOYEE
+WHERE DNO = DEPTNO
+GROUP BY DEPTNAME
+HAVING AVG(SALARY) = (SELECT MAX(AVG(SALARY))
+FROM EMPLOYEE
+GROUP BY DNO)
+
+--질의14 : 모든 부서에 대해서 이름, 층, 각 부서에 근무하는 사원 수를 검색하라. 사원이 없는 부서도 포함시켜라
+SELECT DEPTNAME, FLOOR, COUNT(EMPNO)
+FROM DEPARTMENT LEFT OUTER JOIN EMPLOYEE ON DEPTNO = DNO
+GROUP BY DEPTNAME, FLOOR
+
+
